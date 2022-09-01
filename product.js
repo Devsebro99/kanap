@@ -49,7 +49,9 @@ fetch("http://localhost:3000/api/products")
                 const onClick = document.querySelector("#addToCart");
                 onClick.addEventListener('click', function(){        
                     
-                    let kanap = [{
+                    
+
+                    let objet = {
                         id : idArticle,
                         name : nameArticle,
                         color : myColor,
@@ -57,23 +59,31 @@ fetch("http://localhost:3000/api/products")
                         image : imageArticle,
                         price : priceArticle,
                         desciption : descriptionArticle
-                    }]                  
+                    }                 
                     
+                    const kanap = [objet];
 
-                    if(localStorage.getItem("kanap") === null){
-                        let stockageObjet = localStorage.setItem("kanap", JSON.stringify(kanap))
+                    if ((myColor == "" || myColor == undefined) || (quantity <= 0 || quantity == null)){
+                        alert("Veuiller choisir une couleur et une quantité positive");  
                     }else{
                         
-                        let ajoutKanap = JSON.parse(localStorage.getItem("kanap"));
-                        console.log(ajoutKanap);
-                        
-                    }; 
-                    
+                        if(localStorage.getItem("kanap") === null){
+                            localStorage.setItem("kanap", JSON.stringify(kanap))
+                        }else{  
+                            let ajoutKanap = JSON.parse(localStorage.getItem("kanap"));
+                            console.log(ajoutKanap);
+                            
+                            for( i=1 ; i<kanap.length ; i++){
+                                kanap += kanap.push(`ajoutKanap${i}`);
+                            };
+                            localStorage.setItem("kanap", JSON.stringify(kanap))
+                            
+                        }; 
+                    };
                 }); 
-                
             }
         }
-        
+
     }) 
     
     .catch(function(err){
