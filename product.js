@@ -47,9 +47,7 @@ fetch("http://localhost:3000/api/products")
                 //Sur clic du bouton "ajouter dans le panier"
                 //les informations du produit sont stocké au localStorage si couleur et quantité est choisi
                 const onClick = document.querySelector("#addToCart");
-                onClick.addEventListener('click', function(){        
-                    
-                    
+                onClick.addEventListener('click', function(){
 
                     let objet = {
                         id : idArticle,
@@ -59,24 +57,25 @@ fetch("http://localhost:3000/api/products")
                         image : imageArticle,
                         price : priceArticle,
                         desciption : descriptionArticle
-                    }                 
-                    
-                    const kanap = [objet];
+                    }    
 
+                   
+                    let kanap;
                     if ((myColor == "" || myColor == undefined) || (quantity <= 0 || quantity == null)){
                         alert("Veuiller choisir une couleur et une quantité positive");  
                     }else{
-                        
                         if(localStorage.getItem("kanap") === null){
+                            kanap = [objet];
                             localStorage.setItem("kanap", JSON.stringify(kanap))
                         }else{  
-                            let ajoutKanap = JSON.parse(localStorage.getItem("kanap"));
-                            console.log(ajoutKanap);
+                            let tableauPrecedent = JSON.parse(localStorage.getItem("kanap"));
+                            [ancienObjet] = tableauPrecedent;
                             
-                            for( i=1 ; i<kanap.length ; i++){
-                                kanap += kanap.push(`ajoutKanap${i}`);
-                            };
-                            localStorage.setItem("kanap", JSON.stringify(kanap))
+                            for(i=0 ; i<kanap.length ; i++){
+                                kanap = [ancienObjet , objet];
+                            }
+                        
+                            localStorage.setItem("kanap", JSON.stringify(kanap));
                             
                         }; 
                     };
