@@ -48,63 +48,26 @@ fetch("http://localhost:3000/api/products")
                 //les informations du produit sont stocké au localStorage si couleur et quantité est choisi
                 const onClick = document.querySelector("#addToCart");
                 onClick.addEventListener('click', function(){        
-                    const objet = {
-                        id : idArticle , 
-                        color : myColor , 
-                        quantity : quantity,
-                        price : priceArticle,
-                        image : imageArticle,
+                    
+                    let kanap = [{
+                        id : idArticle,
                         name : nameArticle,
-                        description : descriptionArticle
+                        color : myColor,
+                        quantite : quantity,
+                        image : imageArticle,
+                        price : priceArticle,
+                        desciption : descriptionArticle
+                    }]                  
+                    
+
+                    if(localStorage.getItem("kanap") === null){
+                        let stockageObjet = localStorage.setItem("kanap", JSON.stringify(kanap))
+                    }else{
+                        
+                        let ajoutKanap = JSON.parse(localStorage.getItem("kanap"));
+                        console.log(ajoutKanap);
+                        
                     }; 
-
-                    let objetKey;
-                    for (var z = 0; z < localStorage.length; z++) {
-                        objetKey = JSON.parse(localStorage.getItem(localStorage.key(z)));
-                    }
-
-                    // Vérifier si la selection de couleur et quantité est egale à null, 
-                    // undefined ou "0" si oui alors alerte sinon continue
-                    if((myColor === null || myColor === undefined)  || (quantity == 0 || quantity == undefined || quantity == null)){                
-                        alert("Vous devez choisir une couleur et une quantité")
-                    }else{  
-                        let quantity;
-                        if(objetKey == undefined){
-                            localStorage.setItem(`kanap${0}`,JSON.stringify(objet));
-                        }else{
-                            
-                                if((idArticle == objetKey.id) || (myColor != objetKey.color)){
-                                    let r ;
-                                    localStorage.setItem(`kanap${r}`,JSON.stringify(objet));
-                                    return r = r + 1;
-                                }else{
-                                    localStorage.setItem(`kanap${r}`,JSON.stringify(quantity = objetKey.quantity + quantity));
-                                    
-                                }
-                            
-                        };       
-                            
-                        
-                        
-
-                        // let key;
-                        // for (var z = 0; z < localStorage.length; z++) {
-                        //     key = JSON.parse(localStorage.getItem(localStorage.key(z)));
-                        // }
-                        // let color;
-                        // let id;
-                        // if((idArticle == key.id)){  
-                        //     if(color == key.color){
-                        //         let ajoutQuantity = key.quantity + quantity;
-                        //         console.log(ajoutQuantity);
-                        //         localStorage.setItem(idArticle,JSON.stringify(objet));
-                        //     }else{
-                        //         localStorage.setItem(idArticle,JSON.stringify(objet));
-                        //     };   
-                        // }else{
-                        //     localStorage.setItem(idArticle,JSON.stringify(objet));   
-                        // }; 
-                    }  
                     
                 }); 
                 
