@@ -71,9 +71,12 @@ fetch("http://localhost:3000/api/products")
                             let tableauPrecedent = JSON.parse(localStorage.getItem("kanap"));
                             [ancienObjet] = tableauPrecedent;
                             
-                            for(i=0 ; i<kanap.length ; i++){
-                                kanap = [ancienObjet , objet];
-                            }
+                            
+                            for(i = 0 ; i < kanap.length ; i++){
+                                
+                                kanap.key(i) = [objet];
+                                kanap = tableauPrecedent.push(kanap.key(i));
+                            };
                         
                             localStorage.setItem("kanap", JSON.stringify(kanap));
                             
