@@ -54,31 +54,46 @@ fetch("http://localhost:3000/api/products")
                         name : nameArticle,
                         color : myColor,
                         quantite : quantity,
-                        image : imageArticle,
+                        image : value[i].imageUrl,
                         price : priceArticle,
-                        desciption : descriptionArticle
+                        desciption : descriptionArticle,
+                        altTxt : value[i].altTxt
                     }    
 
                    
-                    let kanap;
+                    
                     if ((myColor == "" || myColor == undefined) || (quantity <= 0 || quantity == null)){
                         alert("Veuiller choisir une couleur et une quantité positive");  
                     }else{
+                        
                         if(localStorage.getItem("kanap") === null){
-                            kanap = [objet];
+                            const kanap = [objet];
                             localStorage.setItem("kanap", JSON.stringify(kanap))
                         }else{  
-                            let tableauPrecedent = JSON.parse(localStorage.getItem("kanap"));
-                            [ancienObjet] = tableauPrecedent;
-                            
-                            
-                            for(i = 0 ; i < kanap.length ; i++){
+                            const precedentTableau = JSON.parse(localStorage.getItem("kanap"));  
+
+                            do { precedentTableau.push(objet);
+                            } while (precedentTableau.color != objet.color);
+
+                            console.log(objet.color);
+
+
+
+                            // for(i = 0 ; i < precedentTableau.length ; i++){
+                            //     if(precedentTableau[i].color === objet.color){
+                            //         let totalAddition = objet.quantite + precedentTableau[i].quantite
+                                    
+                            //         precedentTableau[i].quantite = totalAddition;
+                                    
+                            //         precedentTableau.push(objet);
+
+                            //     }else{
+                            //         precedentTableau.push(objet);
+                            //     }
                                 
-                                kanap.key(i) = [objet];
-                                kanap = tableauPrecedent.push(kanap.key(i));
-                            };
-                        
-                            localStorage.setItem("kanap", JSON.stringify(kanap));
+                            // };
+                            
+                            localStorage.setItem("kanap", JSON.stringify(precedentTableau));
                             
                         }; 
                     };
