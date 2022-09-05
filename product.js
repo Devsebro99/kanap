@@ -61,7 +61,7 @@ fetch("http://localhost:3000/api/products")
                     }    
 
                    
-                    
+                    //Met un message d'alerte quand des couleurs et quantités ne sont pas sélectionnées
                     if ((myColor == "" || myColor == undefined) || (quantity <= 0 || quantity == null)){
                         alert("Veuiller choisir une couleur et une quantité positive");  
                     }else{
@@ -71,28 +71,30 @@ fetch("http://localhost:3000/api/products")
                             localStorage.setItem("kanap", JSON.stringify(kanap))
                         }else{  
                             const precedentTableau = JSON.parse(localStorage.getItem("kanap"));  
-
-                            do { precedentTableau.push(objet);
-                            } while (precedentTableau.color != objet.color);
-
-                            console.log(objet.color);
-
-
-
-                            // for(i = 0 ; i < precedentTableau.length ; i++){
-                            //     if(precedentTableau[i].color === objet.color){
-                            //         let totalAddition = objet.quantite + precedentTableau[i].quantite
-                                    
-                            //         precedentTableau[i].quantite = totalAddition;
-                                    
-                            //         precedentTableau.push(objet);
-
-                            //     }else{
-                            //         precedentTableau.push(objet);
-                            //     }
-                                
-                            // };
                             
+                            //nameColors , quantités et nameId sont toutes les couleurs ,quantités et ids du tableau de "precedentTableau".
+                            let nameColors;  
+                            let nameId;  
+                            let nameQuantite;                  
+                            for (i=0 ; i<precedentTableau.length ; i++){
+                                nameColors = precedentTableau[i].color;
+                                nameId = precedentTableau[i].id;
+                                nameQuantite = precedentTableau[i].quantite;
+                            }
+
+                            console.log(objet.color === nameColors);
+                            console.log(objet.id === nameId);
+                            console.log(objet.quantite);
+                            console.log(nameQuantite);
+
+                            let additionQuantite;
+                            if (objet.color === nameColors || objet.id === nameId){
+                                additionQuantite = (objet.quantite + nameQuantite);
+                               
+                            };
+                            console.log(additionQuantite);
+
+                            precedentTableau.push(objet);
                             localStorage.setItem("kanap", JSON.stringify(precedentTableau));
                             
                         }; 
