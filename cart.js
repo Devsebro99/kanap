@@ -7,10 +7,10 @@ fetch("http://localhost:3000/api/products")
         
         //Récupération de kanap en objet
         const kanap = JSON.parse(localStorage.getItem("kanap"));
-        
+        let objet;
         //Boucle qui permet de créer tous les articles du localStorage
         for(let i = 0 ; i < kanap.length ; i++){             
-            let objet = {
+            objet = {
                 id : kanap[i].id,
                 name : value[i].name,
                 color : kanap[i].color,
@@ -19,8 +19,8 @@ fetch("http://localhost:3000/api/products")
                 price : value[i].price,
                 altTxt : value[i].altTxt
             }
-           
-            
+       
+
             //Création de la partie HTML pour afficher tous les 
             //articles choisi par l'utilisateur
             let cardPanier = document.getElementById("cart__items").innerHTML += `
@@ -45,40 +45,72 @@ fetch("http://localhost:3000/api/products")
                 </div>
                 </div>
             </article>`;
+ 
         };
-            
+        
         // // Récupérer toutes les quantités dans un tableau à partir du localStorage
         // const nouveauTableau = [];  
         // for(q=0 ; q<kanap.length ; q++){       
         //     nouveauTableau.push(kanap[q].quantite);
         // };
           
-
-
-        // Observation du changement de quantité utilisateur
-        let valeur;
-        let selectionQuantity = document.getElementsByClassName("itemQuantity");
-        console.log(selectionQuantity);
+        // récupération des valeurs de quantité des différents articles
         
-        selectionQuantity.addEventListener("change", event(valeur));
-        console.log(selectionQuantity);
         
-        function event(valeur){
-            for(i=0 ; i<selectionQuantity.length ; i++){
-                valeur = selectionQuantity[i].value;
-                console.log(valeur);
-                selectionQuantity[i].setAttribute("itemQuantity", kanap[i].quantite);
-                
-               console.log(selectionQuantity[i]);
-               
-            }
-        };
+        // for(q=0 ; q<kanap.length ; q++){
 
-        
+        //     let tableauSelectionQuantity = document.getElementsByClassName("itemQuantity");
+        //     console.log(tableauSelectionQuantity);
+        //     tableauSelectionQuantity.addEventListener("change", );
+
+        //     let valeur = input.value;
+            
+        // }
         
             
+        // //Fonction Supprimer l'article
+        // let supprimerArticle = document.getElementsByClassName("deleteItem");
+       
+        // supprimerArticle.addEventListener("click", function supprimer(e){
+        //     let x = e.target.value; 
+
+        // });
         
-    }) 
+
+
+
+
+
+
+        //Calcul de la quantité total
+        let tableauTotalQuantity = [];
+        let sumQuantity = 0;
+        for(q=0 ; q<kanap.length ; q++){
+            tableauTotalQuantity.push(parseInt(kanap[q].quantite));
+            sumQuantity += tableauTotalQuantity[q];
+        }
+        document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
+        console.log(sumQuantity);
+        console.log(tableauTotalQuantity);
+
+        //Calcul du prix total de tous les articles
+        let tableauTotalprice = [];
+        let sumPrice = 0; 
+        for(p=0 ; p<kanap.length ; p++){
+            tableauTotalprice.push(kanap[p].quantite * value[p].price); 
+            sumPrice += tableauTotalprice[p];
+        }
+        document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
+        console.log(tableauTotalprice);
+
+        
+        
+
+        
+    })
 .catch(function(err){
     // Une erreur est survenue
 });
+
+
+
