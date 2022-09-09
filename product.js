@@ -50,6 +50,7 @@ fetch("http://localhost:3000/api/products")
                     //Tableau kanap
                     let objet = {
                         id : idArticle,
+                        name : value[i].name,
                         color : myColor,
                         quantite : quantity 
                     }    
@@ -66,7 +67,7 @@ fetch("http://localhost:3000/api/products")
                             //Obtenir le tableau pour comparer la couleur et l'Id et faire un filtre
                             let precedentTableau = JSON.parse(localStorage.getItem("kanap"));  
                             let memeColorId = precedentTableau.find((o) => o.color === objet.color && o.id === objet.id);
-                
+
                             if (memeColorId){
                                 memeColorId.quantite = parseInt(objet.quantite) + parseInt(memeColorId.quantite);
                                 localStorage.setItem("kanap", JSON.stringify(precedentTableau));
