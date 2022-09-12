@@ -82,29 +82,55 @@ fetch("http://localhost:3000/api/products")
 
 
 
-        //Calcul de la quantité total
+        
+        
+
+        //Calcul du prix total  et quantité total de tous les articles du panier
         let tableauTotalQuantity = [];
         let sumQuantity = 0;
-        for(q=0 ; q<kanap.length ; q++){
-            tableauTotalQuantity.push(parseInt(kanap[q].quantite));
-            sumQuantity += tableauTotalQuantity[q];
-        }
-        document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
-        console.log(sumQuantity);
-        console.log(tableauTotalQuantity);
-
-        //Calcul du prix total de tous les articles
         let tableauTotalprice = [];
         let sumPrice = 0; 
         for(p=0 ; p<kanap.length ; p++){
+            
+            tableauTotalQuantity.push(parseInt(kanap[p].quantite));
+            sumQuantity += tableauTotalQuantity[p];
+            
             tableauTotalprice.push(kanap[p].quantite * value[p].price); 
             sumPrice += tableauTotalprice[p];
         }
         document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
-        console.log(tableauTotalprice);
+        document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
 
+
+
+        // Formulaire____________________________________
         
+        //Restriction Prénom
+        let firstName = document.getElementById("firstName");
+        firstName.setAttribute("pattern","[A-z]{3,}");
+        firstName.setAttribute("placeholder","Sebastien");
         
+        document.getElementById("firstNameErrorMsg").innerHTML = "";
+
+
+        //Restriction Nom
+        let lastName = document.getElementById("lastName");
+        lastName.setAttribute("pattern","[A-z]{3,}");
+        lastName.setAttribute("placeholder","Robin");
+
+        //Restriction Adresse
+        let address = document.getElementById("address");
+        address.setAttribute("pattern","[0-9][a-z]{3,}");
+        address.setAttribute("placeholder","75 rue du Pain");
+
+        //Restriction Ville
+        let city = document.getElementById("city");
+        city.setAttribute("pattern","[A-z]{3,}");
+        city.setAttribute("placeholder","Lyon");
+
+        //Restriction E-mail
+        let email = document.getElementById("email");
+        email.setAttribute("placeholder","sebastienrobin@hotmail.com");
 
         
     })
