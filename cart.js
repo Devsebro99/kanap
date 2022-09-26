@@ -7,20 +7,19 @@ fetch("http://localhost:3000/api/products")
         return res.json();
         }})
     .then((value) => {
-        console.log(value);
+
         //Récupération de kanap en objet
         const kanap = JSON.parse(localStorage.getItem("kanap"));
         console.log(kanap);
-        
-        
         let objet;
         let i = 0;
         function genererHtml(){
+
             //Boucle qui permet de créer tous les articles du localStorage
-            for(i = 0 ; i < kanap.length ; i++){   
+            for(i = 0 ; i < kanap.length ; i++){
+
                 // trouve l'égalité entre l'ID de localStorage et l'API
                 let element = value.filter(val => val._id == kanap[i].id);
-                
                 objet = {
                     id : kanap[i].id,
                     name : element[0].name,
@@ -30,6 +29,7 @@ fetch("http://localhost:3000/api/products")
                     price : element[0].price,
                     altTxt : element[0].altTxt
                 }             
+                
 
                 //Création de la partie HTML pour afficher tous les 
                 //articles choisi par l'utilisateur
@@ -69,15 +69,17 @@ fetch("http://localhost:3000/api/products")
             for(p=0 ; p<kanap.length ; p++){
                 tableauTotalQuantity.push(parseInt(kanap[p].quantite));
                 sumQuantity += tableauTotalQuantity[p];
-                
                 tableauTotalprice.push(kanap[p].quantite * value[p].price); 
                 sumPrice += tableauTotalprice[p];
+                console.log(sumQuantity );
+                console.log(sumPrice);
             }
-            document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
             document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
+            document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
+            
         }
 
-        
+
         //
         let objetSelect;
         const itemQuantity = document.querySelectorAll(".itemQuantity");
@@ -107,6 +109,7 @@ fetch("http://localhost:3000/api/products")
                     }else{
                     }               
                 }
+
                 //Calcul du prix total et quantité total de tous les articles du panier
                 calcul();
             });         
@@ -127,42 +130,97 @@ fetch("http://localhost:3000/api/products")
             });
         } 
         //Calcul du prix total et quantité total de tous les articles du panier
-        calcul();   
+        calcul();  
     })
 .catch(function(err){
     // Une erreur est survenue
 });
 
 
-// Formulaire____________________________________
+let contact;
+// Formulaire test Regex____________________________________
         
-//Restriction Prénom
+//Prénom********************
 let firstName = document.getElementById("firstName");
-firstName.setAttribute("pattern","[A-z]{3,}");
-firstName.setAttribute("placeholder","Sebastien");
+firstName.setAttribute("placeholder","Sébastien");
+firstName.addEventListener("change", function verifierPrenom(){
+    let prenom = firstName.value;
+    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    if(regex.test(prenom)) { 
+        contact.prenom = prenom;
+        document.getElementById("firstNameErrorMsg").innerHTML = "";
+        
+    }else{
+        document.getElementById("firstNameErrorMsg").innerHTML = "veuillez respecter la syntaxe";
+    }; 
+});
 
-document.getElementById("firstNameErrorMsg").innerHTML = "";
-
-
-//Restriction Nom
+//Nom********************
 let lastName = document.getElementById("lastName");
-lastName.setAttribute("pattern","[A-z]{3,}");
-lastName.setAttribute("placeholder","Robin");
+lastName.setAttribute("placeholder","Pageau");
+lastName.addEventListener("change", function verifierNom(){
+    let nom = lastName.value;
+    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    if(regex.test(nom)) { 
+        contact.nom = nom;
+        document.getElementById("lastNameErrorMsg").innerHTML = "";
+    }else{
+        document.getElementById("lastNameErrorMsg").innerHTML = "veuillez respecter la syntaxe";
+    }; 
+});
 
-//Restriction Adresse
+//Adresse********************
 let address = document.getElementById("address");
-address.setAttribute("pattern","[0-1000][A-z]{3,}");
-address.setAttribute("placeholder","75 rue du Pain");
+address.setAttribute("placeholder","7 bis rue du Pain 77358 Lyon");
+address.addEventListener("change", function verifierAddress(){
+    let adresse = address.value;
+    const regex = /^([0-9]*) ?([a-zA-Z-,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)*$/;
+    if(regex.test(adresse)) { 
+        contact.adresse = adresse;
+        document.getElementById("addressErrorMsg").innerHTML = "";
+    }else{
+        document.getElementById("addressErrorMsg").innerHTML = "veuillez respecter la syntaxe";
+    }; 
+});
 
-//Restriction Ville
+//Ville********************
 let city = document.getElementById("city");
-city.setAttribute("pattern","[A-z]{3,}");
 city.setAttribute("placeholder","Lyon");
+city.addEventListener("change", function verifierCity(){
+    let ville = city.value;
+    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+    if(regex.test(ville)) { 
+        contact.ville = ville;
+        document.getElementById("cityErrorMsg").innerHTML = "";
+    }else{
+        document.getElementById("cityErrorMsg").innerHTML = "veuillez respecter la syntaxe";
+    }; 
+});
 
-//Restriction E-mail
+//E-mail********************
 let email = document.getElementById("email");
-email.setAttribute("placeholder","sebastienrobin@hotmail.com");        
+email.setAttribute("placeholder","sebastien.pageau125@hotmail.fr");
+email.addEventListener("change", function verifierEmail(){
+    let courrier = email.value;
+    const regex = /^(^([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+    if(regex.test(courrier)) { 
+        contact.email = courrier;
+        document.getElementById("emailErrorMsg").innerHTML = "";
+    }else{
+        document.getElementById("emailErrorMsg").innerHTML = "veuillez respecter la syntaxe";
+    }; 
+});
 
 
+//Objet contact________________________________________________
+contact = {
+    prenom : firstName.value,
+    nom : lastName.value,
+    adresse : address.value,
+    ville : city.value,
+    email : email.value
+};
+const tableauContact = [contact];
+console.log(tableauContact);
 
-
+localStorage.setItem("contact", JSON.stringify(tableauContact));
