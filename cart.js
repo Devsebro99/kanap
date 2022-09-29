@@ -1,20 +1,16 @@
 
-
-
 fetch("http://localhost:3000/api/products")
     .then((res) => {
         if (res.ok) {
         return res.json();
         }})
     .then((value) => {
-
         //Récupération de kanap en objet
         const kanap = JSON.parse(localStorage.getItem("kanap"));
-        console.log(kanap);
         let objet;
         let i = 0;
-        function genererHtml(){
 
+        function genererHtml(){
             //Boucle qui permet de créer tous les articles du localStorage
             for(i = 0 ; i < kanap.length ; i++){
 
@@ -28,8 +24,7 @@ fetch("http://localhost:3000/api/products")
                     image : element[0].imageUrl,
                     price : element[0].price,
                     altTxt : element[0].altTxt
-                }             
-                
+                }    
 
                 //Création de la partie HTML pour afficher tous les 
                 //articles choisi par l'utilisateur
@@ -69,16 +64,13 @@ fetch("http://localhost:3000/api/products")
             for(p=0 ; p<kanap.length ; p++){
                 tableauTotalQuantity.push(parseInt(kanap[p].quantite));
                 sumQuantity += tableauTotalQuantity[p];
-                tableauTotalprice.push(kanap[p].quantite * value[p].price); 
+                tableauTotalprice.push(kanap[p].quantite * objet.price); 
                 sumPrice += tableauTotalprice[p];
-                console.log(sumQuantity );
-                console.log(sumPrice);
             }
             document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
             document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
             
         }
-
 
         //
         let objetSelect;
@@ -109,9 +101,9 @@ fetch("http://localhost:3000/api/products")
                     }else{
                     }               
                 }
-
                 //Calcul du prix total et quantité total de tous les articles du panier
                 calcul();
+               
             });         
         }
 
@@ -124,9 +116,7 @@ fetch("http://localhost:3000/api/products")
                 let tableauLocalStorage = JSON.parse(localStorage.getItem("kanap"));
                 let result = tableauLocalStorage.filter((item)=> (item.id !== id || item.color !== color));
                 localStorage.setItem("kanap", JSON.stringify(result));
-                window.location.reload();
-                // document.getElementById("cart__items").innerHTML = "";
-                // document.getElementById("cart__items").innerHTML = `<button onClick="genererHtml()"></button>`;                
+                window.location.reload();        
             });
         } 
         //Calcul du prix total et quantité total de tous les articles du panier
@@ -137,32 +127,38 @@ fetch("http://localhost:3000/api/products")
 });
 
 
-let contact;
 // Formulaire test Regex____________________________________
-        
+//Objet contact
+let contact = {
+    firstName : firstName.value,
+    lastName : lastName.value,
+    address : address.value,
+    city : city.value,
+    email : email.value
+};       
+
 //Prénom********************
-let firstName = document.getElementById("firstName");
-firstName.setAttribute("placeholder","Sébastien");
-firstName.addEventListener("change", function verifierPrenom(){
-    let prenom = firstName.value;
+document.getElementById("firstName").setAttribute("placeholder","Sébastien")
+let elementFirstName = document.getElementById("firstName");
+elementFirstName.addEventListener("change", function verifierPrenom(){
+    let prenom = elementFirstName.value;
     const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
     if(regex.test(prenom)) { 
-        contact.prenom = prenom;
+        contact.firstName = prenom;
         document.getElementById("firstNameErrorMsg").innerHTML = "";
-        
     }else{
         document.getElementById("firstNameErrorMsg").innerHTML = "veuillez respecter la syntaxe";
     }; 
 });
 
 //Nom********************
-let lastName = document.getElementById("lastName");
-lastName.setAttribute("placeholder","Pageau");
-lastName.addEventListener("change", function verifierNom(){
-    let nom = lastName.value;
+document.getElementById("lastName").setAttribute("placeholder","Pageau");
+let elementLastName = document.getElementById("lastName");
+elementLastName.addEventListener("change", function verifierNom(){
+    let nom = elementLastName.value;
     const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
     if(regex.test(nom)) { 
-        contact.nom = nom;
+        contact.lastName = nom;
         document.getElementById("lastNameErrorMsg").innerHTML = "";
     }else{
         document.getElementById("lastNameErrorMsg").innerHTML = "veuillez respecter la syntaxe";
@@ -170,13 +166,13 @@ lastName.addEventListener("change", function verifierNom(){
 });
 
 //Adresse********************
-let address = document.getElementById("address");
-address.setAttribute("placeholder","7 bis rue du Pain 77358 Lyon");
-address.addEventListener("change", function verifierAddress(){
-    let adresse = address.value;
+document.getElementById("address").setAttribute("placeholder","7 bis rue du Pain 77358 Lyon");
+let elementAddress = document.getElementById("address");
+elementAddress.addEventListener("change", function verifierAddress(){
+    let adresse = elementAddress.value;
     const regex = /^([0-9]*) ?([a-zA-Z-,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)*$/;
     if(regex.test(adresse)) { 
-        contact.adresse = adresse;
+        contact.address = adresse;
         document.getElementById("addressErrorMsg").innerHTML = "";
     }else{
         document.getElementById("addressErrorMsg").innerHTML = "veuillez respecter la syntaxe";
@@ -184,13 +180,13 @@ address.addEventListener("change", function verifierAddress(){
 });
 
 //Ville********************
-let city = document.getElementById("city");
-city.setAttribute("placeholder","Lyon");
-city.addEventListener("change", function verifierCity(){
-    let ville = city.value;
+document.getElementById("city").setAttribute("placeholder","Lyon");
+let elementCity = document.getElementById("city");
+elementCity.addEventListener("change", function verifierCity(){
+    let ville = elementCity.value;
     const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
     if(regex.test(ville)) { 
-        contact.ville = ville;
+        contact.city = ville;
         document.getElementById("cityErrorMsg").innerHTML = "";
     }else{
         document.getElementById("cityErrorMsg").innerHTML = "veuillez respecter la syntaxe";
@@ -198,10 +194,10 @@ city.addEventListener("change", function verifierCity(){
 });
 
 //E-mail********************
-let email = document.getElementById("email");
-email.setAttribute("placeholder","sebastien.pageau125@hotmail.fr");
-email.addEventListener("change", function verifierEmail(){
-    let courrier = email.value;
+document.getElementById("email").setAttribute("placeholder","sebastien.pageau125@hotmail.fr");
+let elementEmail = document.getElementById("email");
+elementEmail.addEventListener("change", function verifierEmail(){
+    let courrier = elementEmail.value;
     const regex = /^(^([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
     if(regex.test(courrier)) { 
         contact.email = courrier;
@@ -211,16 +207,53 @@ email.addEventListener("change", function verifierEmail(){
     }; 
 });
 
+let e;
 
-//Objet contact________________________________________________
-contact = {
-    prenom : firstName.value,
-    nom : lastName.value,
-    adresse : address.value,
-    ville : city.value,
-    email : email.value
-};
-const tableauContact = [contact];
-console.log(tableauContact);
 
-localStorage.setItem("contact", JSON.stringify(tableauContact));
+
+let commande = document.getElementById("order");
+commande.addEventListener("click",function commander(){
+    //Tableau d'objet Canapé
+    const kanap = JSON.parse(localStorage.getItem("kanap"));
+    //Objet qui regroupe la liste d'objet et le formulaire
+    const dataUser = {
+        contact: contact,
+        products: kanap,
+    }
+
+    //Envoi à l'API le formulaire et la liste d'objet
+    async function send(e) {
+    
+    fetch(`http://localhost:3000/api/products/order`, {
+                method: "POST",
+                headers: {
+                    'Accept': 'application/json', 
+                    'Content-Type': 'application/json; charset=utf-8'
+                },
+                body: JSON.stringify(dataUser),
+            })
+    }
+    //Reception de l'API
+    async function reception(e){
+    
+    fetch("http://localhost:3000/api/products/order")
+    .then((res) => {
+        if (res.ok) {
+        return res.json();
+        }})
+    .then((value) => {
+        localStorage.setItem("key",value);
+        console.log(value);
+    })
+    }
+
+    async function resultat(){
+        await send(e);
+        await reception(e);
+    }
+    resultat();
+});
+
+
+
+    //location.href = "../html/confirmation.html";
