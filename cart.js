@@ -207,53 +207,34 @@ elementEmail.addEventListener("change", function verifierEmail(){
     }; 
 });
 
-let e;
-
-
 
 let commande = document.getElementById("order");
 commande.addEventListener("click",function commander(){
+    
     //Tableau d'objet Canapé
     const kanap = JSON.parse(localStorage.getItem("kanap"));
+    
     //Objet qui regroupe la liste d'objet et le formulaire
     const dataUser = {
         contact: contact,
         products: kanap,
     }
+    const jou = localStorage.setItem("valeur", JSON.stringify(dataUser));
 
-    //Envoi à l'API le formulaire et la liste d'objet
-    async function send(e) {
-    
-    fetch(`http://localhost:3000/api/products/order`, {
-                method: "POST",
-                headers: {
-                    'Accept': 'application/json', 
-                    'Content-Type': 'application/json; charset=utf-8'
-                },
-                body: JSON.stringify(dataUser),
-            })
-    }
-    //Reception de l'API
-    async function reception(e){
-    
-    fetch("http://localhost:3000/api/products/order")
-    .then((res) => {
-        if (res.ok) {
-        return res.json();
-        }})
-    .then((value) => {
-        localStorage.setItem("key",value);
-        console.log(value);
+    fetch("http://localhost:3000/api/products", {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataUser),
     })
-    }
-
-    async function resultat(){
-        await send(e);
-        await reception(e);
-    }
-    resultat();
+    .then((res) => res.json())
+    .then(function(value) {
+        localStorage.setItem("data", JSON.stringify(value))
+      })
+    .catch(() => {})
 });
 
 
-
-    //location.href = "../html/confirmation.html";
+    
