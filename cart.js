@@ -225,7 +225,7 @@ elementEmail.addEventListener("change", function verifierEmail(){
 
 
 let commande = document.getElementById("order");
-commande.addEventListener("click",function commander(){ 
+commande.addEventListener("click",function commander(e){ 
     if(errorMsgFirstName.innerHTML != "Valide" || errorMsgLastName.innerHTML != "Valide" || errorMsgAddress.innerHTML != "Valide" || errorMsgCity.innerHTML != "Valide" || errorMsgEmail.innerHTML != "Valide"){
       alert("Le formulaire n'est pas valide");     
     }else{
@@ -250,7 +250,8 @@ commande.addEventListener("click",function commander(){
         .then((data) => (data))
         .catch(() => {})
 
-        window.open("../html/confirmation.html");
+        // window.open("../html/confirmation.html");
+        e.preventDefault();
     };
 });
 
