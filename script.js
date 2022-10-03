@@ -5,8 +5,6 @@ fetch("http://localhost:3000/api/products")
         }})
 
     .then(function(value){
-        console.log(value);
-
         //Boucle "For" pour créer le nombre d'objet "article" selon l'API
         for ( let i=0 ; i<value.length ; i++) {
             document.getElementById("items").innerHTML += `

@@ -10,8 +10,10 @@ fetch("http://localhost:3000/api/products")
         }})
     .then((value) => {
         
+        
         //Boucle qui incrémente i selon le nombre d'article
         for( let i=0 ; i<value.length; i++){
+            
             //boucle if permet de comparer deux Ids
             if(articleIdUrl == value[i]._id){
                 let idArticle = value[i]._id;
@@ -21,6 +23,7 @@ fetch("http://localhost:3000/api/products")
                 const nameArticle = document.getElementById("title").innerHTML = `${value[i].name}`;
                 const priceArticle = document.getElementById("price").innerHTML = `${value[i].price}`;
                 const descriptionArticle = document.getElementById("description").innerHTML = `${value[i].description}`;               
+                    
 
                 //Affiche le choix des couleurs correspondant au produit
                 for( let c=0 ; c<value[i].colors.length ; c++){
