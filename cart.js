@@ -7,13 +7,12 @@ fetch("http://localhost:3000/api/products")
     .then((value) => {
         //Récupération de kanap en objet
         const kanap = JSON.parse(localStorage.getItem("kanap"));
+        
         let objet;
         let i = 0;
-
         function genererHtml(){
             //Boucle qui permet de créer tous les articles du localStorage
             for(i = 0 ; i < kanap.length ; i++){
-
                 // trouve l'égalité entre l'ID de localStorage et l'API
                 let element = value.filter(val => val._id == kanap[i].id);
                 objet = {
@@ -151,7 +150,7 @@ elementFirstName.addEventListener("change", function verifierPrenom(){
         
     }else{
         errorMsgFirstName.setAttribute("style","color:red");
-        errorMsgFirstName.innerHTML = "veuillez respecter la syntaxe";
+        errorMsgFirstName.innerHTML = "Veuillez respecter la syntaxe";
     }; 
 });
 
@@ -168,7 +167,7 @@ elementLastName.addEventListener("change", function verifierNom(){
         errorMsgLastName.innerHTML = "Valide";
     }else{
         errorMsgLastName.setAttribute("style","color:red");
-        errorMsgLastName.innerHTML = "veuillez respecter la syntaxe";
+        errorMsgLastName.innerHTML = "Veuillez respecter la syntaxe";
     }; 
 });
 
@@ -185,7 +184,7 @@ elementAddress.addEventListener("change", function verifierAddress(){
         errorMsgAddress.innerHTML = "Valide";
     }else{
         errorMsgAddress.setAttribute("style","color:red");
-        errorMsgAddress.innerHTML = "veuillez respecter la syntaxe";
+        errorMsgAddress.innerHTML = "Veuillez respecter la syntaxe";
     }; 
 });
 
@@ -202,7 +201,7 @@ elementCity.addEventListener("change", function verifierCity(){
         errorMsgCity.innerHTML = "Valide";
     }else{
         errorMsgCity.setAttribute("style","color:red");
-        errorMsgCity.innerHTML = "veuillez respecter la syntaxe";
+        errorMsgCity.innerHTML = "Veuillez respecter la syntaxe";
     }; 
 });
 
@@ -219,10 +218,11 @@ elementEmail.addEventListener("change", function verifierEmail(){
         errorMsgEmail.innerHTML = "Valide";
     }else{
         errorMsgEmail.setAttribute("style","color:red");
-        errorMsgEmail.innerHTML = "veuillez respecter la syntaxe";
+        errorMsgEmail.innerHTML = "Veuillez respecter la syntaxe";
     }; 
 });
 
+ 
 
 let commande = document.getElementById("order");
 commande.addEventListener("click",function commander(e){ 
@@ -230,15 +230,16 @@ commande.addEventListener("click",function commander(e){
       alert("Le formulaire n'est pas valide");     
     }else{
         //Tableau d'objet Canapé
-        const kanap = JSON.parse(localStorage.getItem("kanap"));
-        
+        const kanap = JSON.parse(localStorage.getItem("kanap"));        
+        let productIds = kanap.map(o => o.id);       
+        console.log(productIds);
         //Objet qui regroupe la liste d'objet et le formulaire
         let dataUser = {
             contact: contact,
-            products: kanap,
+            products: productIds,
         }
 
-        fetch("http://localhost:3000/api/products/order", {
+        fetch('http://localhost:3000/api/products/order',{
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json',
@@ -247,10 +248,11 @@ commande.addEventListener("click",function commander(e){
                 body: JSON.stringify(dataUser) 
             })
         .then((res) => res.json())
-        .then((data) => (data))
+        .then((data) => {
+            console.log(data);
+            window.location.href="../html/confirmation.html?orderId="+data.orderId;
+        })
         .catch(() => {})
-
-        // window.open("../html/confirmation.html");
         e.preventDefault();
     };
 });

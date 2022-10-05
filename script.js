@@ -3,7 +3,6 @@ fetch("http://localhost:3000/api/products")
         if (res.ok) {
         return res.json();
         }})
-
     .then(function(value){
         //Boucle "For" pour créer le nombre d'objet "article" selon l'API
         for ( let i=0 ; i<value.length ; i++) {
@@ -13,10 +12,9 @@ fetch("http://localhost:3000/api/products")
                     <img src="${value[i].imageUrl}" alt="${value[i].altTxt}">
                     <h3 class="productName">${value[i].name}</h3> 
                     <p class="productDescription">${value[i].description}</p>
-                 </article> 
+                </article> 
             </a>`;
-        }})
-   
+        }})   
     .catch(function(err) {
         // Une erreur est survenue
     });

@@ -1,7 +1,7 @@
+
 //Récupère l'adresse URL de la page et recupère l'ID de l'URL
 let page =`${window.location.href}`;
 const articleIdUrl = page.substring(page.lastIndexOf( "=" )+1 );
-
 
 fetch("http://localhost:3000/api/products")
     .then((res) => {
@@ -9,8 +9,7 @@ fetch("http://localhost:3000/api/products")
         return res.json();
         }})
     .then((value) => {
-        
-        
+         
         //Boucle qui incrémente i selon le nombre d'article
         for( let i=0 ; i<value.length; i++){
             
@@ -59,10 +58,9 @@ fetch("http://localhost:3000/api/products")
                     }    
                     const kanap = [objet];
 
-
                     //Met un message d'alerte quand des couleurs et quantités ne sont pas sélectionnées
                     if ((myColor == "" || myColor == undefined) || (quantity <= 0 || quantity == null)){
-                        alert("Veuiller choisir une couleur et une quantité positive");  
+                        alert("Veuiller choisir une couleur et une quantité");  
                     }else{
                         if(localStorage.getItem("kanap") === null){
                             localStorage.setItem("kanap", JSON.stringify(kanap))
@@ -70,14 +68,13 @@ fetch("http://localhost:3000/api/products")
                             //Obtenir le tableau pour comparer la couleur et l'Id et faire un filtre
                             let precedentTableau = JSON.parse(localStorage.getItem("kanap"));  
                             let memeColorId = precedentTableau.find((o) => o.color === objet.color && o.id === objet.id);
-
                             if (memeColorId){
                                 memeColorId.quantite = parseInt(objet.quantite) + parseInt(memeColorId.quantite);
                                 localStorage.setItem("kanap", JSON.stringify(precedentTableau));
                             }else{
                                 precedentTableau.push(objet);
                                 localStorage.setItem("kanap", JSON.stringify(precedentTableau));
-                            };              
+                            };           
                         }; 
                     };
                 }); 
