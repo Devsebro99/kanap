@@ -5,16 +5,14 @@ fetch("http://localhost:3000/api/products")
         return res.json();
         }})
     .then((value) => {
-        //Récupération de kanap en objet
-        const kanap = JSON.parse(localStorage.getItem("kanap"));
-        
+        //Générer l'affichage des articles du panier
         let objet;
-        let i = 0;
+        const kanap = JSON.parse(localStorage.getItem("kanap"));
+
         function genererHtml(){
-            //Boucle qui permet de créer tous les articles du localStorage
-            for(i = 0 ; i < kanap.length ; i++){
-                // trouve l'égalité entre l'ID de localStorage et l'API
+            for(let i = 0 ; i < kanap.length ; i++){
                 let element = value.filter(val => val._id == kanap[i].id);
+                
                 objet = {
                     id : kanap[i].id,
                     name : element[0].name,
@@ -25,8 +23,6 @@ fetch("http://localhost:3000/api/products")
                     altTxt : element[0].altTxt
                 }    
 
-                //Création de la partie HTML pour afficher tous les 
-                //articles choisi par l'utilisateur
                 document.getElementById("cart__items").innerHTML += `
                 <article class="cart__item" data-id="${objet.id}" data-color="${objet.color}">
                     <div class="cart__item__img">
@@ -54,7 +50,7 @@ fetch("http://localhost:3000/api/products")
         };
         genererHtml();
 
-        //Calcul du prix total  et quantité total de tous les articles du panier
+        //Calcul du prix total et quantité total de tous les articles du panier
         function calcul(){
             let tableauTotalQuantity = [];
             let sumQuantity = 0;
@@ -68,177 +64,170 @@ fetch("http://localhost:3000/api/products")
             }
             document.getElementById("totalQuantity").innerHTML = `${sumQuantity}`;
             document.getElementById("totalPrice").innerHTML = `${sumPrice}`;
-            
         }
 
-        //
+        //Ecoute l'evenement sur les quantitées pour les modifier dans le localStorage
         let objetSelect;
+        let memeIdColor;
         const itemQuantity = document.querySelectorAll(".itemQuantity");
         for (let qtyInput of itemQuantity) {
             qtyInput.addEventListener("change", (e) => {
                 const newQuantity = e.target.value;
                         
-                // Créer un objet de sélection utilisateur
                 objetSelect = {
                     id : e.target.dataset.id,
                     color : e.target.dataset.color,
                     nombre : e.target.value
                 }
-                
+
                 // Trouve et modifie la quantitée du produit sélectionné
-                let tableauLocalStorage = JSON.parse(localStorage.getItem("kanap"));  
-                let memeIdColor = tableauLocalStorage.find((o) => o.id === objetSelect.id && o.color === objetSelect.color);               
-                memeIdColor.quantite = objetSelect.nombre;
-                
-                // Validation de la nouvelle valeur et insertion dans le LocalStorage
-                for(let i = 0 ; i < kanap.length ; i++){
-                    if (kanap[i].id == memeIdColor.id && kanap[i].color == memeIdColor.color){
-                        const objetSupprimer = kanap.splice(i, 1);
-                        kanap.splice(i, 0, memeIdColor);
-                        localStorage.setItem('kanap', JSON.stringify(kanap));
-                        
-                    }else{
-                    }               
+                function quantiteSelectionner(){
+                    let tableauLocalStorage = JSON.parse(localStorage.getItem("kanap"));  
+                    memeIdColor = tableauLocalStorage.find((o) => o.id === objetSelect.id && o.color === objetSelect.color);               
+                    memeIdColor.quantite = objetSelect.nombre;
                 }
-                //Calcul du prix total et quantité total de tous les articles du panier
+
+                // Validation de la nouvelle valeur et insertion dans le LocalStorage
+                function validationLocalStorage(){
+                    for(let i = 0 ; i < kanap.length ; i++){
+                        if (kanap[i].id == memeIdColor.id && kanap[i].color == memeIdColor.color){
+                            const objetSupprimer = kanap.splice(i, 1);
+                            kanap.splice(i, 0, memeIdColor);
+                            localStorage.setItem('kanap', JSON.stringify(kanap));
+                        }else{
+                        }               
+                    }
+                }
+                quantiteSelectionner()
+                validationLocalStorage();
                 calcul();
-               
             });         
         }
 
         // Supprimer un article avec le bouton supprimer
-        let deleteItems = document.querySelectorAll(".deleteItem");
-        for(let deleteItem of deleteItems){
-            deleteItem.addEventListener("click",(e) => {
-                let id = e.target.dataset.id;
-                let color = e.target.dataset.color;
-                let tableauLocalStorage = JSON.parse(localStorage.getItem("kanap"));
-                let result = tableauLocalStorage.filter((item)=> (item.id !== id || item.color !== color));
-                localStorage.setItem("kanap", JSON.stringify(result));
-                window.location.reload();        
-            });
-        } 
-        //Calcul du prix total et quantité total de tous les articles du panier
+        function boutonSupprimer(){
+            let deleteItems = document.querySelectorAll(".deleteItem");
+            for(let deleteItem of deleteItems){
+                deleteItem.addEventListener("click",(e) => {
+                    let id = e.target.dataset.id;
+                    let color = e.target.dataset.color;
+                    let tableauLocalStorage = JSON.parse(localStorage.getItem("kanap"));
+                    let result = tableauLocalStorage.filter((item)=> (item.id !== id || item.color !== color));
+                    localStorage.setItem("kanap", JSON.stringify(result));
+                    window.location.reload();        
+                });
+            }
+        }
+        boutonSupprimer();
         calcul();  
     })
-.catch(function(err){
-    // Une erreur est survenue
-});
+.catch(function(err){});
 
 
 // Formulaire test Regex____________________________________
-//Objet contact
-let contact = {
-    firstName : firstName.value,
-    lastName : lastName.value,
-    address : address.value,
-    city : city.value,
-    email : email.value
-};       
+
+//Test validation de formulaire (regex)
+function testFormulaire(para1 , para2 , para3){
+    if(para1 .test(para2)){ 
+        para3.setAttribute("style","color:#0AFF0E");
+        para3.innerHTML = "Valide";
+    }else{
+        para3.setAttribute("style","color:red");
+        para3.innerHTML = "Veuillez respecter la syntaxe";
+    }; 
+}
 
 //Prénom********************
-document.getElementById("firstName").setAttribute("placeholder","Sébastien")
-let errorMsgFirstName = document.getElementById("firstNameErrorMsg");
-let elementFirstName = document.getElementById("firstName");
-elementFirstName.addEventListener("change", function verifierPrenom(){
-    let prenom = elementFirstName.value;
-    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-    if(regex.test(prenom)) { 
-        contact.firstName = prenom;
-        errorMsgFirstName.setAttribute("style","color:#0AFF0E");
-        errorMsgFirstName.innerHTML = "Valide";
-        
-    }else{
-        errorMsgFirstName.setAttribute("style","color:red");
-        errorMsgFirstName.innerHTML = "Veuillez respecter la syntaxe";
-    }; 
-});
-
+let errorMsgFirstName;
+let elementFirstName;
+function prenom(){
+    document.getElementById("firstName").setAttribute("placeholder","Sébastien");
+    errorMsgFirstName = document.getElementById("firstNameErrorMsg");
+    elementFirstName = document.getElementById("firstName");
+    elementFirstName.addEventListener("change", function verifierPrenom(){
+        regexFirstName = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+        testFormulaire(regexFirstName , elementFirstName.value , errorMsgFirstName);
+    });
+}
 //Nom********************
-document.getElementById("lastName").setAttribute("placeholder","Pageau");
-let errorMsgLastName = document.getElementById("lastNameErrorMsg");
-let elementLastName = document.getElementById("lastName");
-elementLastName.addEventListener("change", function verifierNom(){
-    let nom = elementLastName.value;
-    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-    if(regex.test(nom)) { 
-        contact.lastName = nom;
-        errorMsgLastName.setAttribute("style","color:#0AFF0E");
-        errorMsgLastName.innerHTML = "Valide";
-    }else{
-        errorMsgLastName.setAttribute("style","color:red");
-        errorMsgLastName.innerHTML = "Veuillez respecter la syntaxe";
-    }; 
-});
-
+let errorMsgLastName;
+let elementLastName;
+function nom(){
+    document.getElementById("lastName").setAttribute("placeholder","Pageau");
+    errorMsgLastName = document.getElementById("lastNameErrorMsg");
+    elementLastName = document.getElementById("lastName");
+    elementLastName.addEventListener("change", function verifierNom(){
+        regexLastName = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+        testFormulaire(regexLastName , elementLastName.value , errorMsgLastName);
+    });
+}
 //Adresse********************
-document.getElementById("address").setAttribute("placeholder","7 bis rue du Pain 77358 Lyon");
-let errorMsgAddress = document.getElementById("addressErrorMsg");
-let elementAddress = document.getElementById("address");
-elementAddress.addEventListener("change", function verifierAddress(){
-    let adresse = elementAddress.value;
-    const regex = /^([0-9]*) ?([a-zA-Z-,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)*$/;
-    if(regex.test(adresse)) { 
-        contact.address = adresse;
-        errorMsgAddress.setAttribute("style","color:#0AFF0E");
-        errorMsgAddress.innerHTML = "Valide";
-    }else{
-        errorMsgAddress.setAttribute("style","color:red");
-        errorMsgAddress.innerHTML = "Veuillez respecter la syntaxe";
-    }; 
-});
-
+let errorMsgAddress;
+let elementAddress;
+function adresse(){
+    document.getElementById("address").setAttribute("placeholder","7 bis rue du Pain 77358 Lyon");
+    errorMsgAddress = document.getElementById("addressErrorMsg");
+    elementAddress = document.getElementById("address");
+    elementAddress.addEventListener("change", function verifierAddress(){
+        regexAddress = /^([0-9]*) ?([a-zA-Z-,\. ]*) ?([0-9]{5}) ?([a-zA-Z]*)*$/;
+        testFormulaire(regexAddress , elementAddress.value , errorMsgAddress);
+    });
+}
 //Ville********************
-document.getElementById("city").setAttribute("placeholder","Lyon");
-let errorMsgCity = document.getElementById("cityErrorMsg");
-let elementCity = document.getElementById("city");
-elementCity.addEventListener("change", function verifierCity(){
-    let ville = elementCity.value;
-    const regex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-    if(regex.test(ville)) { 
-        contact.city = ville;
-        errorMsgCity.setAttribute("style","color:#0AFF0E");
-        errorMsgCity.innerHTML = "Valide";
-    }else{
-        errorMsgCity.setAttribute("style","color:red");
-        errorMsgCity.innerHTML = "Veuillez respecter la syntaxe";
-    }; 
-});
-
+let errorMsgCity
+let elementCity
+function ville(){
+    document.getElementById("city").setAttribute("placeholder","Lyon");
+    errorMsgCity = document.getElementById("cityErrorMsg");
+    elementCity = document.getElementById("city");
+    elementCity.addEventListener("change", function verifierCity(){
+        regexCity = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+        testFormulaire(regexCity , elementCity.value , errorMsgCity);
+    });
+}
 //E-mail********************
-document.getElementById("email").setAttribute("placeholder","sebastien.pageau125@hotmail.fr");
-let errorMsgEmail = document.getElementById("emailErrorMsg");
-let elementEmail = document.getElementById("email");
-elementEmail.addEventListener("change", function verifierEmail(){
-    let courrier = elementEmail.value;
-    const regex = /^(^([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
-    if(regex.test(courrier)) { 
-        contact.email = courrier;
-        errorMsgEmail.setAttribute("style","color:#0AFF0E");
-        errorMsgEmail.innerHTML = "Valide";
-    }else{
-        errorMsgEmail.setAttribute("style","color:red");
-        errorMsgEmail.innerHTML = "Veuillez respecter la syntaxe";
-    }; 
-});
+let errorMsgEmail;
+let elementEmail;
+function email(){
+    document.getElementById("email").setAttribute("placeholder","sebastien.pageau125@hotmail.fr");
+    errorMsgEmail = document.getElementById("emailErrorMsg");
+    elementEmail = document.getElementById("email");
+    elementEmail.addEventListener("change", function verifierEmail(){
+        regexEmail = /^(^([^<>()[]\.,;:s@]+(.[^<>()[]\.,;:s@]+)*)|(.+))@(([[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}.[0-9]{1,3}])|(([a-zA-Z-0-9]+.)+[a-zA-Z]{2,}))$/;
+        testFormulaire(regexEmail , elementEmail.value , errorMsgEmail);
+    });
+}
 
- 
+prenom();
+nom();
+adresse();
+ville();
+email();
 
+//Dernier test de validation du formulaire entier avant la recupération du numero de commande et de son envoi
+let contact;
 let commande = document.getElementById("order");
 commande.addEventListener("click",function commander(e){ 
     if(errorMsgFirstName.innerHTML != "Valide" || errorMsgLastName.innerHTML != "Valide" || errorMsgAddress.innerHTML != "Valide" || errorMsgCity.innerHTML != "Valide" || errorMsgEmail.innerHTML != "Valide"){
       alert("Le formulaire n'est pas valide");     
     }else{
-        //Tableau d'objet Canapé
+        contact = {
+            firstName : elementFirstName.value,
+            lastName : elementLastName.value,
+            address : elementAddress.value,
+            city : elementCity.value,
+            email : elementEmail.value
+        };  
+
         const kanap = JSON.parse(localStorage.getItem("kanap"));        
-        let productIds = kanap.map(o => o.id);       
-        console.log(productIds);
-        //Objet qui regroupe la liste d'objet et le formulaire
+        let productIds = kanap.map(o => o.id); 
+
+        //Objet qui regroupe la liste des canapés et le formulaire
         let dataUser = {
             contact: contact,
             products: productIds,
         }
-
+        
         fetch('http://localhost:3000/api/products/order',{
                 headers: {
                     'Accept': 'application/json',
@@ -249,8 +238,7 @@ commande.addEventListener("click",function commander(e){
             })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
-            window.location.href="../html/confirmation.html?orderId="+data.orderId;
+           window.location.href="../html/confirmation.html?orderId="+data.orderId;
         })
         .catch(() => {})
         e.preventDefault();

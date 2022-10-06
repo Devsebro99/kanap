@@ -14,7 +14,8 @@ fetch("http://localhost:3000/api/products")
                     <p class="productDescription">${value[i].description}</p>
                 </article> 
             </a>`;
-        }})   
+        }  
+    })        
     .catch(function(err) {
         // Une erreur est survenue
     });
