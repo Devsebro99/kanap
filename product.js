@@ -56,6 +56,11 @@ fetch("http://localhost:3000/api/products")
                 const onClick = document.querySelector("#addToCart");
                 onClick.addEventListener('click', function(){
                     
+                    function changeButtonColor(){
+                        setTimeout(function(){onClick.setAttribute("style","color:white");},300);
+                        onClick.setAttribute("style","color:#00FF00");                       
+                    }
+
                     let objet = {
                         id : idArticle,
                         name : value[i].name,
@@ -69,8 +74,10 @@ fetch("http://localhost:3000/api/products")
                         alert("Veuiller choisir une couleur et une quantité");  
                     }else{
                         if(localStorage.getItem("kanap") === null){
+                            changeButtonColor();
                             localStorage.setItem("kanap", JSON.stringify(kanap))
                         }else{  
+                            changeButtonColor();
                             //Obtenir le tableau pour comparer la couleur et l'Id et faire un filtre
                             let precedentTableau = JSON.parse(localStorage.getItem("kanap"));  
 
